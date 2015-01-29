@@ -1,5 +1,10 @@
 {
 	"ImportPath": "heroku/imgsize",
 	"GoVersion": "go1.4.1",
-	"Deps": []
+	"Deps": [
+		{
+			"ImportPath": "github.com/nfnt/resize",
+			"Rev": "8f4493144849aa7855fc525f5953c439180e6f25"
+		}
+	]
 }
