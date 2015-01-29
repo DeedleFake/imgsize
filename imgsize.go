@@ -62,8 +62,13 @@ func handleResize(rw http.ResponseWriter, req *http.Request) {
 }
 
 func handleMain(rw http.ResponseWriter, req *http.Request) {
-	page := "main.html"
-	if req.URL.Path != "/" {
+	var page string
+	switch req.URL.Path {
+	case "/favicon.ico":
+		page = "favicon.png"
+	case "/":
+		page = "main.html"
+	default:
 		page = req.URL.Path
 	}
 
