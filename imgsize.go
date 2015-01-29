@@ -4,6 +4,7 @@ import (
 	"github.com/nfnt/resize"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"image"
@@ -61,7 +62,12 @@ func handleResize(rw http.ResponseWriter, req *http.Request) {
 }
 
 func handleMain(rw http.ResponseWriter, req *http.Request) {
-	http.ServeFile(rw, req, "assets/main.html")
+	page := "main.html"
+	if req.URL.Path != "/" {
+		page = req.URL.Path
+	}
+
+	http.ServeFile(rw, req, filepath.Join("assets", page))
 }
 
 func main() {

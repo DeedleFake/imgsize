@@ -1,0 +1,56 @@
+body
+{
+	background-color:#EEEEEE;
+}
+
+#wrap
+{
+	width:700px;
+	margin:0px auto;
+	padding:8px;
+	background-color:#FFFFFF;
+	box-shadow:1px 1px 5px #AAAAAA;
+}
+
+#head > h2
+{
+	text-align:center;
+}
+
+#main > form
+{
+	width:500px;
+	margin:0px auto;
+}
+
+.form-table
+{
+	width:100%;
+}
+
+.form-table td:first-child
+{
+	width:20%;
+	text-align:right;
+	padding-right:4px;
+}
+
+.form-table td:last-child
+{
+	width:80%;
+}
+
+.form-table td:last-child > *
+{
+	width:100%;
+}
+
+a
+{
+	text-decoration:none;
+}
+
+a:hover
+{
+	background-color:#EEEEEE;
+}
