@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/nfnt/resize"
 	"net/http"
 	"os"
@@ -14,12 +13,12 @@ import (
 )
 
 var methods = map[string]resize.InterpolationFunction{
-	"nearest-neighbor":  resize.NearestNeighbor,
-	"bilinear":          resize.Bilinear,
-	"bicubic":           resize.Bicubic,
-	"MitchellNetravali": resize.MitchellNetravali,
-	"lanczos2":          resize.Lanczos2,
-	"lanczos3":          resize.Lanczos3,
+	"nearest-neighbor":   resize.NearestNeighbor,
+	"bilinear":           resize.Bilinear,
+	"bicubic":            resize.Bicubic,
+	"mitchell-netravali": resize.MitchellNetravali,
+	"lanczos2":           resize.Lanczos2,
+	"lanczos3":           resize.Lanczos3,
 }
 
 func handleResize(rw http.ResponseWriter, req *http.Request) {
@@ -62,7 +61,7 @@ func handleResize(rw http.ResponseWriter, req *http.Request) {
 }
 
 func handleMain(rw http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(rw, "This is a test.")
+	http.ServeFile(rw, req, "assets/main.html")
 }
 
 func main() {

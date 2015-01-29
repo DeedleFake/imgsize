@@ -1,0 +1,47 @@
+<html>
+	<head>
+		<title>Image Size</title>
+	</head>
+	<body>
+		<div id='wrap'>
+			<div id='head'>
+				<h2>Image Size</h2>
+				Welcome to Image Size. This is a simple web-app that fetches images from a URL and resizes them. The idea is to make it easier to embed images on forums that don't support resizing, or other similar situations.
+
+				To resize an image to specific width or height with a preserved aspect ratio, simply leave the other dimension blank. For exmaple, setting width to 100 and leaving height blank will resize a 200x100 image to 100x50.
+
+				This app uses the <a href='https://www.github.com/nfnt/resize'>resize package</a> to preform the actual resizing.
+			</div>
+			<div id='main'>
+				<form method='get' action='/resize'>
+					<table>
+						<tr>
+							<td>URL:</td>
+							<td><input type='text' name='url' /></td>
+						</tr>
+						<tr>
+							<td>Width:</td>
+							<td><input type='number' min='0' max='10000' name='width' /></td>
+						</tr>
+						<tr>
+							<td>Height:</td><td>
+								<input type='number' min='0' max='10000' name='height' /></td>
+						</tr>
+						<tr>
+							<td>Method:</td>
+							<td>
+								<select name='method'>
+									<option value="nearest-neighbor">Nearest Neighbor</option>
+									<option value='bilinear'>Bilinear</option>
+									<option value="bicubic">Bicubic</option>
+									<option value="mitchell-netravali">Mitchell Netravali</option>
+									<option value="lanczos2">Lanczos 2</option>
+									<option value="lanczos3">Lanczos 3</option>
+								</select>
+							</td>
+						</tr>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>
