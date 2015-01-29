@@ -6,11 +6,12 @@
 		<div id='wrap'>
 			<div id='head'>
 				<h2>Image Size</h2>
-				Welcome to Image Size. This is a simple web-app that fetches images from a URL and resizes them. The idea is to make it easier to embed images on forums that don't support resizing, or other similar situations.
 
-				To resize an image to specific width or height with a preserved aspect ratio, simply leave the other dimension blank. For exmaple, setting width to 100 and leaving height blank will resize a 200x100 image to 100x50.
+				<p>Welcome to Image Size. This is a simple web-app that fetches images from a URL and resizes them. The idea is to make it easier to embed images on forums that don't support resizing, or other similar situations. The app has support for PNG, JPEG, and GIF files, but the output is currently always PNG.</p>
 
-				This app uses the <a href='https://www.github.com/nfnt/resize'>resize package</a> to preform the actual resizing.
+				<p>To resize an image to specific width or height with a preserved aspect ratio, simply leave the other dimension blank. For exmaple, setting width to 100 and leaving height blank will resize a 200x100 image to 100x50.</p>
+
+				<p>This app uses the <a href='https://www.github.com/nfnt/resize'>resize package</a> to preform the actual resizing.</p>
 			</div>
 			<div id='main'>
 				<form method='get' action='/resize'>
@@ -39,6 +40,10 @@
 									<option value="lanczos3">Lanczos 3</option>
 								</select>
 							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><input type='submit' value='Resize' /></td>
 						</tr>
 				</form>
 			</div>
