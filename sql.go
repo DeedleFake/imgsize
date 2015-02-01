@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
+	"log"
 	"os"
 )
 
@@ -18,6 +19,12 @@ func init() {
 }
 
 func UpsertImage(hash string, url string, width int, height int, method string) error {
+	log.Printf("Upsert(%q)", hash)
+	log.Printf("\t%q", url)
+	log.Printf("\t%v", width)
+	log.Printf("\t%v", height)
+	log.Printf("\t%q", method)
+
 	row := db.QueryRow(`select count(1) from images where hash=$1`, hash)
 
 	var count int
@@ -52,7 +59,13 @@ func UpsertImage(hash string, url string, width int, height int, method string) 
 
 func SelectImage(hash string) (url string, width, height int, method string, err error) {
 	row := db.QueryRow(`select * from images where hash=$1`, hash)
-	err = row.Scan(&url, &width, &height, &method)
+	err = row.Scan(&url, &width, &height, &method, &hash)
+
+	log.Printf("Select(%q)", hash)
+	log.Printf("\t%q", url)
+	log.Printf("\t%v", width)
+	log.Printf("\t%v", height)
+	log.Printf("\t%q", method)
 
 	return
 }

@@ -30,11 +30,10 @@ var methods = map[string]resize.InterpolationFunction{
 }
 
 func handleCreate(rw http.ResponseWriter, req *http.Request) {
-	q := req.URL.Query()
-	url := q.Get("url")
-	width, _ := strconv.ParseInt(q.Get("width"), 10, 0)
-	height, _ := strconv.ParseInt(q.Get("height"), 10, 0)
-	method := q.Get("method")
+	url := req.FormValue("url")
+	width, _ := strconv.ParseInt(req.FormValue("width"), 10, 0)
+	height, _ := strconv.ParseInt(req.FormValue("height"), 10, 0)
+	method := req.FormValue("method")
 
 	hash := md5.New()
 	io.WriteString(hash, url)
@@ -54,14 +53,14 @@ func handleCreate(rw http.ResponseWriter, req *http.Request) {
 func handleImg(rw http.ResponseWriter, req *http.Request) {
 	img := strings.TrimPrefix(req.URL.Path, "/img/")
 	ext := strings.ToLower(path.Ext(img))
-	hash := img[:len(img)-(len(ext)-1)]
+	hash := img[:len(img)-len(ext)]
 
 	imgURL, width, height, method, err := SelectImage(hash)
 	if err != nil {
 		panic(err)
 	}
 
-	var values url.Values
+	values := make(url.Values, 4)
 	values.Add("url", imgURL)
 	values.Add("width", strconv.FormatInt(int64(width), 10))
 	values.Add("height", strconv.FormatInt(int64(height), 10))
@@ -134,7 +133,7 @@ func handleMain(rw http.ResponseWriter, req *http.Request) {
 
 func main() {
 	http.HandleFunc("/create", handleCreate)
-	http.HandleFunc("/img", handleImg)
+	http.HandleFunc("/img/", handleImg)
 	http.HandleFunc("/resize", handleResize)
 	http.HandleFunc("/", handleMain)
 
