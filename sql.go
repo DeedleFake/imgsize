@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	_ "github.com/lib/pq"
 	"os"
 )
@@ -17,35 +18,41 @@ func init() {
 }
 
 func UpsertImage(hash string, url string, width int, height int, method string) error {
-	row := db.QueryRow(`select 1 from images where hash=?`, hash)
-	err := row.Scan()
-	switch err {
-	case sql.ErrNoRows:
-		_, err = db.Exec(`insert into images values (?, ?, ?, ?, ?)`,
+	row := db.QueryRow(`select count(1) from images where hash=$1`, hash)
+
+	var count int
+	err := row.Scan(&count)
+	if err != nil {
+		return err
+	}
+
+	switch count {
+	case 0:
+		_, err = db.Exec(`insert into images values ($1, $2, $3, $4, $5)`,
 			url,
 			width,
 			height,
 			method,
 			hash,
 		)
-		return err
+	case 1:
+		_, err = db.Exec(`update images set url=$1, width=$2, height=$3, method=$4 where hash=$5`,
+			url,
+			width,
+			height,
+			method,
+			hash,
+		)
 	default:
-		return err
+		return fmt.Errorf("Found %v rows, but expected <= 1", count)
 	}
 
-	_, err = db.Exec(`update images set url=?, width=?, height=?, method=?  where hash=?`,
-		url,
-		width,
-		height,
-		method,
-		hash,
-	)
 	return err
 }
 
 func SelectImage(hash string) (url string, width, height int, method string, err error) {
-	row := db.QueryRow(`select * from images where hash=?`, hash)
-	err = row.Scan(url, width, height, method)
+	row := db.QueryRow(`select * from images where hash=$1`, hash)
+	err = row.Scan(&url, &width, &height, &method)
 
 	return
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/md5"
 	"encoding/binary"
+	"fmt"
 	"github.com/nfnt/resize"
 	"io"
 	"net/http"
@@ -40,7 +41,7 @@ func handleCreate(rw http.ResponseWriter, req *http.Request) {
 	binary.Write(hash, binary.LittleEndian, width)
 	binary.Write(hash, binary.LittleEndian, height)
 	io.WriteString(hash, method)
-	hashString := string(hash.Sum(nil))
+	hashString := fmt.Sprintf("%x", hash.Sum(nil))
 
 	err := UpsertImage(hashString, url, int(width), int(height), method)
 	if err != nil {
