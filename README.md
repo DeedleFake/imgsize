@@ -7,6 +7,7 @@ Requirements
 ------------
 
 * [resize](https://www.github.com/nfnt/resize): A Go package for resizing images.
+* [pq](https://www.github.com/lib/pq): A PostreSQL driver for the database/sql package.
 
 Heroku
 ------

@@ -1,11 +1,12 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
 	"log"
 	"os"
+
+	"database/sql"
+	_ "github.com/lib/pq"
 )
 
 var db *sql.DB
