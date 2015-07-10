@@ -45,7 +45,7 @@ func handleCreate(rw http.ResponseWriter, req *http.Request) {
 	io.WriteString(hash, method)
 	hashString := fmt.Sprintf("%x", hash.Sum(nil))
 
-	err := UpsertImage(hashString, url, int(width), int(height), method)
+	err := UpsertImage(hashString, url, int(width), int(height), method, false)
 	if err != nil {
 		panic(err)
 	}
@@ -58,7 +58,7 @@ func handleImg(rw http.ResponseWriter, req *http.Request) {
 	ext := strings.ToLower(path.Ext(img))
 	hash := img[:len(img)-len(ext)]
 
-	imgURL, width, height, method, err := SelectImage(hash)
+	imgURL, width, height, method, _, err := SelectImage(hash)
 	if err != nil {
 		panic(err)
 	}

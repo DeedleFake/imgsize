@@ -19,7 +19,7 @@ func init() {
 	db = tmpDB
 }
 
-func UpsertImage(hash string, url string, width int, height int, method string) error {
+func UpsertImage(hash string, url string, width int, height int, method string, animgif bool) error {
 	log.Printf("Upsert(%q)", hash)
 	log.Printf("\t%q", url)
 	log.Printf("\t%v", width)
@@ -36,19 +36,21 @@ func UpsertImage(hash string, url string, width int, height int, method string) 
 
 	switch count {
 	case 0:
-		_, err = db.Exec(`insert into images values ($1, $2, $3, $4, $5)`,
+		_, err = db.Exec(`insert into images values ($1, $2, $3, $4, $5, $6)`,
 			url,
 			width,
 			height,
 			method,
 			hash,
+			animgif,
 		)
 	case 1:
-		_, err = db.Exec(`update images set url=$1, width=$2, height=$3, method=$4 where hash=$5`,
+		_, err = db.Exec(`update images set url=$1, width=$2, height=$3, method=$4, animgif=$5 where hash=$6`,
 			url,
 			width,
 			height,
 			method,
+			animgif,
 			hash,
 		)
 	default:
@@ -58,9 +60,9 @@ func UpsertImage(hash string, url string, width int, height int, method string) 
 	return err
 }
 
-func SelectImage(hash string) (url string, width, height int, method string, err error) {
+func SelectImage(hash string) (url string, width, height int, method string, animgif bool, err error) {
 	row := db.QueryRow(`select * from images where hash=$1`, hash)
-	err = row.Scan(&url, &width, &height, &method, &hash)
+	err = row.Scan(&url, &width, &height, &method, &hash, &animgif)
 
 	log.Printf("Select(%q)", hash)
 	log.Printf("\t%q", url)
