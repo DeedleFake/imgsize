@@ -13,6 +13,22 @@ body
 	box-shadow:1px 1px 5px #AAAAAA;
 }
 
+#format-list
+{
+	font-size:3em;
+	list-style-type:none;
+}
+
+#format-list > li
+{
+	display:inline-block;
+}
+
+#format-list > li > a
+{
+	padding:1em;
+}
+
 #head > h2
 {
 	text-align:center;

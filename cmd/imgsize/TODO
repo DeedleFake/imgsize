@@ -1,1 +1,4 @@
 Add ability to output other image types.
+
+Figure out why https://wiki.archlinux.org/skins/ArchLinux/archlogo.png, and
+possibly other images, gets its colors messed up when outputting JPEG and GIF.

@@ -13,10 +13,11 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"text/template"
 
 	"image"
-	_ "image/gif"
-	_ "image/jpeg"
+	"image/gif"
+	"image/jpeg"
 	"image/png"
 )
 
@@ -28,6 +29,8 @@ var methods = map[string]resize.InterpolationFunction{
 	"lanczos2":           resize.Lanczos2,
 	"lanczos3":           resize.Lanczos3,
 }
+
+var tmpls = template.Must(template.ParseGlob("assets/*.html"))
 
 func handleCreate(rw http.ResponseWriter, req *http.Request) {
 	url := req.FormValue("url")
@@ -47,7 +50,7 @@ func handleCreate(rw http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 
-	http.Redirect(rw, req, "/img/"+hashString+".png", http.StatusSeeOther)
+	http.Redirect(rw, req, "/img/"+hashString, http.StatusSeeOther)
 }
 
 func handleImg(rw http.ResponseWriter, req *http.Request) {
@@ -60,11 +63,23 @@ func handleImg(rw http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 
+	switch ext {
+	case ".png", ".jpg", ".jpeg", ".gif":
+	default:
+		err = tmpls.ExecuteTemplate(rw, "fmt.html", hash)
+		if err != nil {
+			panic(err)
+		}
+
+		return
+	}
+
 	values := make(url.Values, 4)
 	values.Add("url", imgURL)
 	values.Add("width", strconv.FormatInt(int64(width), 10))
 	values.Add("height", strconv.FormatInt(int64(height), 10))
 	values.Add("method", method)
+	values.Add("fmt", ext)
 
 	newURL := req.URL
 	newURL.Path = "/resize"
@@ -109,26 +124,42 @@ func handleResize(rw http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 
-	rw.Header().Set("Content-Type", "image/png")
-
-	err = png.Encode(rw, img)
+	switch q.Get("fmt") {
+	case ".png":
+		rw.Header().Set("Content-type", "image/png")
+		err = png.Encode(rw, img)
+	case ".jpg", ".jpeg":
+		rw.Header().Set("Content-type", "image/jpeg")
+		err = jpeg.Encode(rw, img, nil)
+	case ".gif":
+		rw.Header().Set("Content-type", "image/gif")
+		err = gif.Encode(rw, img, nil)
+	}
 	if err != nil {
 		panic(err)
 	}
 }
 
 func handleMain(rw http.ResponseWriter, req *http.Request) {
-	var page string
-	switch req.URL.Path {
-	case "/favicon.ico":
-		page = "favicon.png"
-	case "/":
-		page = "main.html"
-	default:
-		page = req.URL.Path
+	serve := func(page string) {
+		http.ServeFile(rw, req, filepath.Join("assets", page))
 	}
 
-	http.ServeFile(rw, req, filepath.Join("assets", page))
+	exec := func(page string) {
+		err := tmpls.ExecuteTemplate(rw, page, nil)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	switch req.URL.Path {
+	case "/favicon.ico":
+		serve("favicon.png")
+	case "/":
+		exec("main.html")
+	default:
+		serve(req.URL.Path)
+	}
 }
 
 func main() {

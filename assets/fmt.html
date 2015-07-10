@@ -1,0 +1,14 @@
+{{template "top.html"}}
+	<div id='head'>
+		<h2>Image Size</h2>
+
+		<p>Please select a format:</p>
+	</div>
+	<div id='main'>
+		<ul id='format-list'>
+			<li><a href='/img/{{.}}.png'>PNG</a></li>
+			<li><a href='/img/{{.}}.jpg'>JPEG</a></li>
+			<li><a href='/img/{{.}}.gif'>GIF</a></li>
+		</ul>
+	</div>
+{{template "bottom.html"}}
