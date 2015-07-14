@@ -163,12 +163,17 @@ func handleMain(rw http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/create", handleCreate)
-	http.HandleFunc("/img/", handleImg)
-	http.HandleFunc("/resize", handleResize)
-	http.HandleFunc("/", handleMain)
+	mux := &Mux{
+		ServeMux: http.DefaultServeMux,
+		Err:      tmpls.Lookup("err.html"),
+	}
 
-	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+	mux.HandleFunc("/create", handleCreate)
+	mux.HandleFunc("/img/", handleImg)
+	mux.HandleFunc("/resize", handleResize)
+	mux.HandleFunc("/", handleMain)
+
+	err := http.ListenAndServe(":"+os.Getenv("PORT"), mux)
 	if err != nil {
 		panic(err)
 	}
